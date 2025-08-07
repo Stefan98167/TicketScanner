@@ -31,7 +31,7 @@ A modern React Native mobile application for scanning and validating QR code tic
 
 1. **Clone and install**
    ```bash
-   git clone https://github.com/yourusername/TicketScanner.git
+   git clone https://github.com/Stefan98167/TicketScanner.git
    cd TicketScanner
    npm install
    ```
@@ -48,12 +48,35 @@ A modern React Native mobile application for scanning and validating QR code tic
 
 3. **Set up Supabase Database**
    
-   Create the following table in your Supabase database:
+   Create the following tables in your Supabase database:
+   
    ```sql
+   -- Tickets table for storing ticket information
    CREATE TABLE tickets (
      id TEXT PRIMARY KEY,
      devalued BOOLEAN DEFAULT FALSE,
      scanned_at TIMESTAMP WITH TIME ZONE,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+   );
+   
+   -- Scan logs table for analytics and audit trail
+   CREATE TABLE scan_logs (
+     id BIGSERIAL PRIMARY KEY,
+     device_id TEXT NOT NULL,
+     action TEXT NOT NULL CHECK (action IN ('check', 'devalue')),
+     ticket_code TEXT NOT NULL,
+     is_valid BOOLEAN,
+     was_devalued BOOLEAN,
+     success BOOLEAN NOT NULL,
+     message TEXT,
+     meta JSONB,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+   );
+   
+   -- Devices table for tracking scanning devices
+   CREATE TABLE devices (
+     id TEXT PRIMARY KEY,
+     name TEXT,
      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
    );
    ```
