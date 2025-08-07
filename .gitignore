@@ -31,8 +31,19 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+.env.local
+.env.development
+.env.production
 
 # typescript
 *.tsbuildinfo
 
 app-example
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
