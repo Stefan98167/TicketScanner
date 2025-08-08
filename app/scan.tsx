@@ -4,7 +4,6 @@ import { StatusBar } from "expo-status-bar";
 import { Camera, CameraView } from "expo-camera";
 import { router } from "expo-router";
 import { supabase } from "../supabase";
-import { logScanEvent } from "../lib/logging";
 import { useTheme } from "../lib/theme/ThemeProvider";
 import { useI18n } from "../lib/i18n/I18nProvider";
 
@@ -30,7 +29,6 @@ export default function ScanScreen() {
       const { status } = await Camera.requestCameraPermissionsAsync();
       console.log("Camera permission status:", status);
       setHasPermission(status === "granted");
-      // TODO: Ensure device record exists
     })();
   }, []);
 
@@ -52,13 +50,6 @@ export default function ScanScreen() {
     console.log("Fetch result:", { ticket, error });
 
     if (error || !ticket) {
-      await logScanEvent({
-        action: "check",
-        ticketCode: code,
-        isValid: false,
-        success: false,
-        message: error?.message ?? "Ticket not found",
-      });
       router.push({
         pathname: "./ticket-result" as any,
         params: { 
@@ -70,13 +61,6 @@ export default function ScanScreen() {
       return;
     }
 
-    await logScanEvent({
-      action: "check",
-      ticketCode: code,
-      isValid: true,
-      wasDevalued: !!ticket.devalued,
-      success: true,
-    });
     router.push({
       pathname: "./ticket-result" as any,
       params: { 
@@ -96,7 +80,7 @@ export default function ScanScreen() {
 
   const handleManualSubmit = async () => {
     if (!manualCode.trim()) {
-      Alert.alert("Fehler", "Bitte geben Sie einen Ticketcode ein.");
+      Alert.alert(t('scan.error_title'), t('scan.error_enter_code'));
       return;
     }
     await processTicketCode(manualCode.trim());
@@ -108,9 +92,9 @@ export default function ScanScreen() {
 
   if (hasPermission === null) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }] }>
+      <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={[styles.title, { color: colors.text }]}>{t('scan.request_permission')}</Text>
+          <Text style={styles.title}>{t('scan.request_permission')}</Text>
         </View>
       </View>
     );
@@ -118,12 +102,14 @@ export default function ScanScreen() {
 
   if (hasPermission === false) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={[styles.title, { color: colors.text }]}>{t('scan.no_camera_access_title')}</Text>
-          <Text style={[styles.message, { color: colors.warning }]}>{t('scan.no_camera_access_message')}</Text>
-          <TouchableOpacity style={[styles.button, { backgroundColor: colors.surface }]} onPress={goBack}>
-            <Text style={[styles.buttonText, { color: colors.text }]}>{t('common.back')}</Text>
+          <Text style={styles.title}>{t('scan.no_camera_access_title')}</Text>
+          <Text style={styles.message}>
+            {t('scan.no_camera_access_message')}
+          </Text>
+          <TouchableOpacity style={styles.button} onPress={goBack}>
+            <Text style={styles.buttonText}>{t('common.back')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -131,7 +117,7 @@ export default function ScanScreen() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
       <StatusBar style="light" />
       {scanning ? (
         <View style={styles.cameraContainer}>
@@ -143,43 +129,41 @@ export default function ScanScreen() {
           />
           <View style={styles.overlay}>
             <View style={styles.scanFrame} />
-            <Text style={styles.scanInstruction}>
-              Richten Sie die Kamera auf den QR-Code
-            </Text>
+            <Text style={styles.scanInstruction}>{t('scan.instruction')}</Text>
             <TouchableOpacity 
               style={[styles.button, styles.cancelButton]} 
               onPress={() => setScanning(false)}
             >
-              <Text style={styles.buttonText}>Scannen Abbrechen</Text>
+              <Text style={styles.buttonText}>{t('scan.cancel_scanning')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       ) : (
         <View style={styles.content}>
           <TouchableOpacity style={styles.backButton} onPress={goBack}>
-            <Text style={[styles.backButtonText, { color: colors.text }]}>← Zurück</Text>
+            <Text style={styles.backButtonText}>{t('common.back')}</Text>
           </TouchableOpacity>
           
-          <Text style={[styles.title, { color: colors.text }]}>{t('scan.page_title')}</Text>
+          <Text style={styles.title}>{t('scan.page_title')}</Text>
           {message ? (
-            <Text style={[styles.message, { color: colors.warning }]}>{message}</Text>
+            <Text style={styles.message}>{message}</Text>
           ) : (
-            <Text style={[styles.subtitle, { color: colors.mutedText }]}>{t('scan.instruction')}</Text>
+            <Text style={styles.subtitle}>{t('scan.instruction')}</Text>
           )}
           
-          <TouchableOpacity style={[styles.scanButton, { backgroundColor: colors.success }]} onPress={startScanning}>
+          <TouchableOpacity style={styles.scanButton} onPress={startScanning}>
             <Text style={styles.scanButtonIcon}>📷</Text>
             <Text style={styles.scanButtonText}>{t('scan.start_scanning')}</Text>
           </TouchableOpacity>
 
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>oder</Text>
+            <Text style={styles.dividerText}>{t('common.or')}</Text>
             <View style={styles.dividerLine} />
           </View>
 
           <View style={styles.manualInputSection}>
-            <Text style={[styles.manualInputLabel, { color: colors.text }]}>{t('scan.manual_label')}</Text>
+            <Text style={styles.manualInputLabel}>{t('scan.manual_label')}</Text>
             <TextInput
               style={styles.textInput}
               value={manualCode}
@@ -190,7 +174,7 @@ export default function ScanScreen() {
               autoCorrect={false}
             />
             <TouchableOpacity 
-              style={[styles.button, styles.submitButton, { backgroundColor: colors.primary }]} 
+              style={[styles.button, styles.submitButton]} 
               onPress={handleManualSubmit}
             >
               <Text style={styles.buttonText}>{t('scan.validate_code')}</Text>
