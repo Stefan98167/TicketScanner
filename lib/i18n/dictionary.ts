@@ -5,6 +5,15 @@ export type Dictionary = Record<string, string>;
 export const de: Dictionary = {
   'common.back': '← Zurück',
   'common.or': 'oder',
+  // Auth
+  'auth.title': 'Anmelden',
+  'auth.email': 'E-Mail',
+  'auth.password': 'Passwort',
+  'auth.login': 'Anmelden',
+  'auth.logging_in': 'Anmeldung…',
+  'auth.error': 'Anmeldung fehlgeschlagen',
+  'auth.logout': 'Abmelden',
+  'auth.required': 'Bitte melden Sie sich an, um fortzufahren',
 
   'home.title': '🎫 Ticket Scanner',
   'home.subtitle': 'Wählen Sie eine Option um zu beginnen',
@@ -62,6 +71,7 @@ export const de: Dictionary = {
   'settings.language': 'Sprache',
   'settings.language.de': 'Deutsch',
   'settings.language.en': 'Englisch',
+  'settings.account': 'Konto',
   'reports.title': 'Berichte',
   'reports.overview': 'Übersicht',
   'reports.total_tickets': 'Gesamt-Tickets',
@@ -75,6 +85,15 @@ export const de: Dictionary = {
 export const en: Dictionary = {
   'common.back': '← Back',
   'common.or': 'or',
+  // Auth
+  'auth.title': 'Sign in',
+  'auth.email': 'Email',
+  'auth.password': 'Password',
+  'auth.login': 'Log in',
+  'auth.logging_in': 'Logging in…',
+  'auth.error': 'Login failed',
+  'auth.logout': 'Log out',
+  'auth.required': 'Please log in to continue',
 
   'home.title': '🎫 Ticket Scanner',
   'home.subtitle': 'Choose an option to begin',
@@ -132,6 +151,7 @@ export const en: Dictionary = {
   'settings.language': 'Language',
   'settings.language.de': 'German',
   'settings.language.en': 'English',
+  'settings.account': 'Account',
   'reports.title': 'Reports',
   'reports.overview': 'Overview',
   'reports.total_tickets': 'Total tickets',
@@ -145,6 +165,15 @@ export const en: Dictionary = {
 export const sr: Dictionary = {
   'common.back': '← Nazad',
   'common.or': 'ili',
+  // Auth
+  'auth.title': 'Prijava',
+  'auth.email': 'Email',
+  'auth.password': 'Lozinka',
+  'auth.login': 'Prijavi se',
+  'auth.logging_in': 'Prijavljivanje…',
+  'auth.error': 'Prijava nije uspela',
+  'auth.logout': 'Odjava',
+  'auth.required': 'Prijavite se da nastavite',
 
   'home.title': '🎫 Skener karata',
   'home.subtitle': 'Izaberite opciju za početak',
@@ -203,6 +232,7 @@ export const sr: Dictionary = {
   'settings.language.de': 'Nemački',
   'settings.language.en': 'Engleski',
   'settings.language.sr': 'Srpski',
+  'settings.account': 'Nalog',
   'home.reports_title': 'Izveštaji i statistika',
   'home.reports_desc': 'Skeniranja po vremenu i uređaju',
   'reports.title': 'Izveštaji',

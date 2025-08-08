@@ -31,6 +31,15 @@ export default function AnalyticsScreen() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        router.replace('/login');
+      }
+    })();
+  }, []);
+
+  React.useEffect(() => {
     loadData();
   }, []);
 

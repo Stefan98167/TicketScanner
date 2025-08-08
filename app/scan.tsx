@@ -16,6 +16,15 @@ export default function ScanScreen() {
   const [message, setMessage] = useState("");
   const [manualCode, setManualCode] = useState("");
 
+  React.useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        router.replace("/login" as any);
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
