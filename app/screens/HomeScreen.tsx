@@ -4,10 +4,21 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../lib/theme/ThemeProvider";
 import { useI18n } from "../../lib/i18n/I18nProvider";
+import { supabase } from "../../supabase";
 
 export default function HomeScreen() {
   const { colors } = useTheme();
   const { t } = useI18n();
+
+  React.useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        router.replace("/login");
+      }
+    })();
+  }, []);
+
   const handleScanPress = () => {
     router.push("./scan" as any);
   };

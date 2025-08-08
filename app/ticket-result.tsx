@@ -13,6 +13,15 @@ export default function TicketResultScreen() {
   const params = useLocalSearchParams();
   const [message, setMessage] = React.useState("");
   const [processing, setProcessing] = React.useState(false);
+
+  React.useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        router.replace('/login');
+      }
+    })();
+  }, []);
   
   const ticketCode = params.ticketCode as string;
   const isValid = params.isValid === "true";

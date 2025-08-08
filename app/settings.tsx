@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { useTheme } from "../lib/theme/ThemeProvider";
 import { useI18n } from "../lib/i18n/I18nProvider";
+import { supabase } from "../supabase";
 
 export default function SettingsScreen() {
   const { theme, setTheme, colors, isDark } = useTheme();
@@ -12,8 +13,13 @@ export default function SettingsScreen() {
     router.back();
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.replace('/login');
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}> 
       <StatusBar style="dark" />
       <View style={styles.content}>
         <TouchableOpacity style={styles.backButton} onPress={goBack}>
@@ -44,6 +50,13 @@ export default function SettingsScreen() {
             <LangOption flag="🇷🇸" label={t('settings.language.sr')} active={lang === 'sr'} onPress={() => setLang('sr')} colors={{ text: colors.text, border: colors.border, primary: colors.primary }} />
           </ScrollView>
         </View>
+
+        <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border, marginTop: 16 }]}> 
+          <Text style={[styles.cardTitle, { color: colors.text }]}>{t('settings.account') || 'Account'}</Text>
+          <TouchableOpacity onPress={handleLogout} style={[styles.themeOption, { borderColor: colors.error, backgroundColor: 'transparent' }]}> 
+            <Text style={{ color: colors.error, fontWeight: '700' }}>{t('auth.logout')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -51,7 +64,7 @@ export default function SettingsScreen() {
 
 function ThemeOption({ label, active, onPress, colors }: { label: string; active: boolean; onPress: () => void; colors: { text: string; border: string; primary: string } }) {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.themeOption, { borderColor: active ? colors.primary : colors.border, backgroundColor: active ? 'rgba(59,130,246,0.08)' : 'transparent' }]}>
+    <TouchableOpacity onPress={onPress} style={[styles.themeOption, { borderColor: active ? colors.primary : colors.border, backgroundColor: active ? 'rgba(59,130,246,0.08)' : 'transparent' }]}> 
       <Text style={{ color: active ? colors.primary : colors.text, fontWeight: '600' }}>{label}</Text>
     </TouchableOpacity>
   );
@@ -59,7 +72,7 @@ function ThemeOption({ label, active, onPress, colors }: { label: string; active
 
 function LangOption({ label, flag, active, onPress, colors }: { label: string; flag: string; active: boolean; onPress: () => void; colors: { text: string; border: string; primary: string } }) {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.langOption, { borderColor: active ? colors.primary : colors.border, backgroundColor: active ? 'rgba(59,130,246,0.08)' : 'transparent' }]}>
+    <TouchableOpacity onPress={onPress} style={[styles.langOption, { borderColor: active ? colors.primary : colors.border, backgroundColor: active ? 'rgba(59,130,246,0.08)' : 'transparent' }]}> 
       <Text style={{ fontSize: 18, marginRight: 8 }}>{flag}</Text>
       <Text style={{ color: active ? colors.primary : colors.text, fontWeight: '600' }}>{label}</Text>
     </TouchableOpacity>
